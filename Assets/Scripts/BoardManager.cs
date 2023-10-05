@@ -18,16 +18,15 @@ public class BoardManager : MonoBehaviour
     [Range(3, 9)]
     [SerializeField] private int numberOfColumns;
 
+
+    [SerializeField] private List<GameObject> Tiles;                    //Clickable and non clickable objects
+
     // Start is called before the first frame update
     void Start()
     {
         InitializeGrid();
-    }
+        PopulateGridElement();
 
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
 
@@ -45,7 +44,6 @@ public class BoardManager : MonoBehaviour
             }
         }
 
-
     }
 
     //SPAWNING EMPTY GRID ELEMENTS
@@ -61,5 +59,44 @@ public class BoardManager : MonoBehaviour
         gridElement.AddComponent<BoxCollider2D>();      // adding collider for on click detection
 
         GridElementComponent[x, y] = gridElement.GetComponent<GridElement>();
+    }
+
+    //Populate the each grid element with its neiboughr's information
+    private void PopulateGridElement()
+    {
+
+        //Spawning objects from DOWN to UP
+
+        for (int column = 0; column < numberOfColumns; column++)
+        {
+            for (int row = 0; row < numberOfRows; row++)
+            {
+                GridElementComponent[column, row].SpawnTile(Tiles); //SPAWN THE TILE FOR EACH GRID ELEMENT
+
+                AssignNeighbours(column, row);  // UPDATING NEIGHBOURS INFO FOR EACH TILE
+
+            }
+
+        }
+
+    }
+
+    private void AssignNeighbours(int column, int row) {
+
+        if (row != 0)
+        {
+            GridElementComponent[column, row].downGridElement = GridElementComponent[column, row - 1];
+        }
+        
+        if((column) != numberOfColumns-1)
+        {
+            GridElementComponent[column, row].RightGridElement = GridElementComponent[column + 1, row];
+        }
+
+        if(row != numberOfRows - 1)
+        {
+            GridElementComponent[column, row].upGridElement = GridElementComponent[column, row + 1];
+        }
+    
     }
 }
