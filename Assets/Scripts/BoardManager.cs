@@ -25,8 +25,7 @@ public class BoardManager : MonoBehaviour
     void Start()
     {
         InitializeGrid();
-        PopulateGridElement();
-
+        AssignNeighbours(); PopulateGridElement();
     }
 
 
@@ -71,32 +70,51 @@ public class BoardManager : MonoBehaviour
         {
             for (int row = 0; row < numberOfRows; row++)
             {
+                
                 GridElementComponent[column, row].SpawnTile(Tiles); //SPAWN THE TILE FOR EACH GRID ELEMENT
-
-                AssignNeighbours(column, row);  // UPDATING NEIGHBOURS INFO FOR EACH TILE
-
             }
 
         }
 
     }
 
-    private void AssignNeighbours(int column, int row) {
+    private void AssignNeighbours() {
 
-        if (row != 0)
-        {
-            GridElementComponent[column, row].downGridElement = GridElementComponent[column, row - 1];
-        }
-        
-        if((column) != numberOfColumns-1)
-        {
-            GridElementComponent[column, row].RightGridElement = GridElementComponent[column + 1, row];
-        }
 
-        if(row != numberOfRows - 1)
+        for (int column = 0; column < numberOfColumns; column++)
         {
-            GridElementComponent[column, row].upGridElement = GridElementComponent[column, row + 1];
+            for (int row = 0; row < numberOfRows; row++)
+            {
+
+                //track neighbour below
+
+                if (row != 0)
+                {
+                    GridElementComponent[column, row].downGridElement = GridElementComponent[column, row - 1];
+                }
+
+                //keep track of its neigbour to right
+                if ((column) != numberOfColumns - 1)
+                {
+                    GridElementComponent[column, row].RightGridElement = GridElementComponent[column + 1, row];
+                }
+
+                //keep track of its neigbour to left
+                if ((column) > 0)
+                {
+                    GridElementComponent[column, row].LeftGridElement = GridElementComponent[column - 1, row];
+                }
+
+                //keep track of its neighbour above
+                if (row != numberOfRows - 1)
+                {
+                    GridElementComponent[column, row].upGridElement = GridElementComponent[column, row + 1];
+                }
+            }
+
         }
+       
     
-    }
+    } 
+
 }
