@@ -14,9 +14,6 @@ public class GridElement : MonoBehaviour
 
     public GridElement downGridElement;
 
-
-
-
     public void SpawnTile(List<GameObject> Tile)
     {
        
@@ -45,18 +42,49 @@ public class GridElement : MonoBehaviour
 
     }
 
-
-    private void OnMouseDown()
+    //On mouse click event
+    //Invokes method to remove tile
+    private void OnMouseDown ()
     {
         RemoveTile();
     }
 
+
+    //Remove tiles from child
     private void RemoveTile()
     {
         if (transform.childCount > 0)
         {
             Destroy(transform.GetChild(0).gameObject);
+            StartCoroutine(WaitToArrangeTile());
+        }
+    }
 
+    void SwapTile()
+    {
+        if (upGridElement != null && upGridElement.transform.childCount > 0)
+        {
+            upGridElement.transform.GetChild(0).SetParent(transform);
+
+            //RESET THE LOCAL POSITION OF THE CHILD
+            transform.GetChild(0).localPosition = new Vector3(0, 0, 0);
+            Debug.Log(transform.GetChild(0).localPosition);
+        }
+    }
+
+
+    IEnumerator WaitToArrangeTile()
+    {
+
+        yield return new WaitForSecondsRealtime(0.2f);
+
+
+        if (upGridElement != null && upGridElement.transform.childCount > 0)
+        {
+            upGridElement.transform.GetChild(0).SetParent(transform);
+
+            //RESET THE LOCAL POSITION OF THE CHILD
+            transform.GetChild(0).localPosition = new Vector3(0, 0, 0);
         }
     }
 }

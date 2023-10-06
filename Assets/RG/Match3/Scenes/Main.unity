@@ -357,8 +357,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Grid: {fileID: 500471114}
-  numberOfRows: 8
-  numberOfColumns: 8
+  numberOfRows: 5
+  numberOfColumns: 5
   Tiles:
   - {fileID: 117254, guid: 59e088146f42e4972a3592e98e22674c, type: 3}
   - {fileID: 124168, guid: 0b21e0b7fe6c5444eb834245eecf95a6, type: 3}

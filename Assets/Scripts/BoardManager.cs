@@ -26,7 +26,7 @@ public class BoardManager : MonoBehaviour
     {
         EventManager.OnInitialzieGrid += InitializeGrid;
         EventManager.OnAssignNeighbours += AssignNeighbours;
-        EventManager.OnSpawnTiles += SpawnGridElements;
+        EventManager.OnSpawnGrid += SpawnGridElements;
         EventManager.OnPopulateGrid += PopulateGridElement;
     }
 
@@ -34,7 +34,7 @@ public class BoardManager : MonoBehaviour
     {
         EventManager.OnInitialzieGrid -= InitializeGrid;
         EventManager.OnAssignNeighbours -= AssignNeighbours;
-        EventManager.OnSpawnTiles -= SpawnGridElements;
+        EventManager.OnSpawnGrid -= SpawnGridElements;
         EventManager.OnPopulateGrid -= PopulateGridElement;
 
     }
@@ -42,6 +42,8 @@ public class BoardManager : MonoBehaviour
     void Start()
     {
         EventManager.OnInitialzieGrid?.Invoke();
+        EventManager.OnAssignNeighbours?.Invoke();
+        EventManager.OnPopulateGrid?.Invoke();
 
     }
 
@@ -56,11 +58,11 @@ public class BoardManager : MonoBehaviour
         {
             for (int row = 0; row < numberOfRows; row++)
             {
-                EventManager.OnSpawnTiles?.Invoke(column, row);
+                EventManager.OnSpawnGrid?.Invoke(column, row);
             }
         }
 
-        EventManager.OnAssignNeighbours?.Invoke();
+        //EventManager.OnAssignNeighbours?.Invoke();
 
     }
 
@@ -89,7 +91,6 @@ public class BoardManager : MonoBehaviour
             {
 
                 //track neighbour below
-
                 if (row != 0)
                 {
                     GridElementComponent[column, row].downGridElement = GridElementComponent[column, row - 1];
@@ -116,7 +117,7 @@ public class BoardManager : MonoBehaviour
 
         }
 
-        EventManager.OnPopulateGrid?.Invoke();
+        //EventManager.OnPopulateGrid?.Invoke();
 
     }
 
@@ -130,7 +131,7 @@ public class BoardManager : MonoBehaviour
         {
             for (int row = 0; row < numberOfRows; row++)
             {
-                
+
                 GridElementComponent[column, row].SpawnTile(Tiles); //SPAWN THE TILE FOR EACH GRID ELEMENT
             }
 
@@ -138,6 +139,6 @@ public class BoardManager : MonoBehaviour
 
     }
 
-   
+
 
 }
