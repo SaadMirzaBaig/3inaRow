@@ -21,11 +21,28 @@ public class BoardManager : MonoBehaviour
 
     [SerializeField] private List<GameObject> Tiles;                    //Clickable and non clickable objects
 
+
+    private void OnEnable()
+    {
+        EventManager.OnInitialzieGrid += InitializeGrid;
+        EventManager.OnAssignNeighbours += AssignNeighbours;
+        EventManager.OnSpawnTiles += SpawnGridElements;
+        EventManager.OnPopulateGrid += PopulateGridElement;
+    }
+
+    private void OnDisable()
+    {
+        EventManager.OnInitialzieGrid -= InitializeGrid;
+        EventManager.OnAssignNeighbours -= AssignNeighbours;
+        EventManager.OnSpawnTiles -= SpawnGridElements;
+        EventManager.OnPopulateGrid -= PopulateGridElement;
+
+    }
     // Start is called before the first frame update
     void Start()
     {
-        InitializeGrid();
-        AssignNeighbours(); PopulateGridElement();
+        EventManager.OnInitialzieGrid?.Invoke();
+
     }
 
 
@@ -39,9 +56,11 @@ public class BoardManager : MonoBehaviour
         {
             for (int row = 0; row < numberOfRows; row++)
             {
-                SpawnGridElements(column, row);
+                EventManager.OnSpawnTiles?.Invoke(column, row);
             }
         }
+
+        EventManager.OnAssignNeighbours?.Invoke();
 
     }
 
@@ -60,25 +79,8 @@ public class BoardManager : MonoBehaviour
         GridElementComponent[x, y] = gridElement.GetComponent<GridElement>();
     }
 
-    //Populate the each grid element with its neiboughr's information
-    private void PopulateGridElement()
+    private void AssignNeighbours()
     {
-
-        //Spawning objects from DOWN to UP
-
-        for (int column = 0; column < numberOfColumns; column++)
-        {
-            for (int row = 0; row < numberOfRows; row++)
-            {
-                
-                GridElementComponent[column, row].SpawnTile(Tiles); //SPAWN THE TILE FOR EACH GRID ELEMENT
-            }
-
-        }
-
-    }
-
-    private void AssignNeighbours() {
 
 
         for (int column = 0; column < numberOfColumns; column++)
@@ -113,8 +115,29 @@ public class BoardManager : MonoBehaviour
             }
 
         }
-       
-    
-    } 
+
+        EventManager.OnPopulateGrid?.Invoke();
+
+    }
+
+    //Populate the each grid element with its neiboughr's information
+    private void PopulateGridElement()
+    {
+
+        //Spawning objects from DOWN to UP
+
+        for (int column = 0; column < numberOfColumns; column++)
+        {
+            for (int row = 0; row < numberOfRows; row++)
+            {
+                
+                GridElementComponent[column, row].SpawnTile(Tiles); //SPAWN THE TILE FOR EACH GRID ELEMENT
+            }
+
+        }
+
+    }
+
+   
 
 }

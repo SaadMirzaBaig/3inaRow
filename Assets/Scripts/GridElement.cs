@@ -32,7 +32,7 @@ public class GridElement : MonoBehaviour
             {
                 randomNum = Random.Range(0, 4);
 
-            } while (leftTile.GetComponent<Tile>().id != randomNum);
+            } while (leftTile.GetComponent<Tile>().id == randomNum);
 
             Instantiate(Tile[randomNum], transform.position, Quaternion.identity, transform);
 
@@ -43,30 +43,20 @@ public class GridElement : MonoBehaviour
             Instantiate(Tile[randomNum], transform.position, Quaternion.identity, transform);
         }
 
+    }
 
-        ////CONTINUE IF IT DOESNT HAVE ANY TILE
-        //if (!hasTile)
-        //{
 
-        //    randomNum = Random.Range(0, 4);
-        //    Instantiate(Tile[randomNum], transform.position, Quaternion.identity, transform);
+    private void OnMouseDown()
+    {
+        RemoveTile();
+    }
 
-        //    hasTile = true;
+    private void RemoveTile()
+    {
+        if (transform.childCount > 0)
+        {
+            Destroy(transform.GetChild(0).gameObject);
 
-        //    SetID();
-        //}
-
-        //// REPLACE THE TILE WITH CLICKABLE OBJECT 
-        //else
-        //{
-
-        //    RemoveTile();
-        //    randomNum = Random.Range(0, 2);
-        //    Instantiate(Tile[randomNum], transform.position, Quaternion.identity, transform);
-
-        //    hasTile = true;
-        //    StartCoroutine(WaitAndGetId());
-
-        //}
+        }
     }
 }
