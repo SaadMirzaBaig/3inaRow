@@ -29,7 +29,6 @@ public class BoardManager : MonoBehaviour
         EventManager.OnSpawnGrid += SpawnGridElements;
         EventManager.OnPopulateGrid += PopulateGridElement;
         EventManager.onReArrangeColumn += ReArrangeColumn;
-        EventManager.onMatchScore += CheckMatch;
     }
 
     private void OnDisable()
@@ -39,7 +38,6 @@ public class BoardManager : MonoBehaviour
         EventManager.OnSpawnGrid -= SpawnGridElements;
         EventManager.OnPopulateGrid -= PopulateGridElement;
         EventManager.onReArrangeColumn -= ReArrangeColumn;
-        EventManager.onMatchScore -= CheckMatch;
 
     }
     // Start is called before the first frame update
@@ -159,32 +157,42 @@ public class BoardManager : MonoBehaviour
             }
         }
 
-        StartCoroutine(WaitToCheckScore(row));
+        //Check for matching tiles
+        StartCoroutine(WaitToCheckScore());
     }
 
 
-    private void CheckMatch(int r)
+    //Check for matching tiles
+    private void CheckMatch()
     {
         int matchCount = 1;
         int tempColumnhold = 0;
 
-        for (int i = 0; i < numberOfRows; i++)
+
+        //Traverse through each row to find maching tiles
+        for (int r = 0; r < numberOfRows; r++)
         {
             for (int c = 0; c < numberOfColumns; c++)
             {
-                if (GridElementComponent[c, i].RightGridElement != null &&
-                    GridElementComponent[c, i].GetTileId == GridElementComponent[c, i].RightGridElement.GetTileId)
+                //Do not check for matching tiles if the right element is null
+                //Compare the tile id of the neighbouring element
+                //Increase the match count on finding 2 or more matching tiles
+                if (GridElementComponent[c, r].RightGridElement != null &&
+                    GridElementComponent[c, r].GetTileId == GridElementComponent[c, r].RightGridElement.GetTileId)
                 {
                     matchCount++;
                     tempColumnhold = c;
                 }
                 else
                 {
+                    //If match count is more than 2,
+                    //remove tiles from each grid element
+                    //Do this untill number of matching tiles is 0
                     if (matchCount > 2)
                     {
                         do
                         {
-                            GridElementComponent[tempColumnhold + 1, i].RemoveTile();
+                            GridElementComponent[tempColumnhold + 1, r].RemoveTile();
                             tempColumnhold--;
                             matchCount--;
                         } while (matchCount > 0);
@@ -200,11 +208,11 @@ public class BoardManager : MonoBehaviour
     }
 
 
-    IEnumerator WaitToCheckScore(int row)
+    IEnumerator WaitToCheckScore()
     {
         yield return new WaitForFixedUpdate();
 
-        CheckMatch(row);
+        CheckMatch();
     }
 
 }

@@ -99,13 +99,7 @@ public class GridElement : MonoBehaviour
         yield return new WaitForSecondsRealtime(0.2f);
 
         EventManager.onReArrangeColumn?.Invoke((int)transform.position.x, (int)transform.position.y);
-        //EventManager.onMatchScore?.Invoke((int)transform.position.y);
 
     }
-
-
-
- 
-
 
 }

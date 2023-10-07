@@ -12,7 +12,6 @@ public class EventManager : MonoBehaviour
     public static Action OnPopulateGrid { get; set; }
 
     public static Action<int,int> onReArrangeColumn { get; set; }
-    public static Action<int> onMatchScore { get; set; }
 
 }
 
