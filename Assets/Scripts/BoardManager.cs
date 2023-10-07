@@ -163,36 +163,40 @@ public class BoardManager : MonoBehaviour
     }
 
 
-    private void CheckMatch(int row)
+    private void CheckMatch(int r)
     {
         int matchCount = 1;
         int tempColumnhold = 0;
 
-        for (int c = 0;  c < numberOfColumns;  c++)
+        for (int i = 0; i < numberOfRows; i++)
         {
-            if (GridElementComponent[c, row].RightGridElement != null && 
-                GridElementComponent[c, row].GetTileId == GridElementComponent[c, row].RightGridElement.GetTileId)
+            for (int c = 0; c < numberOfColumns; c++)
             {
-                matchCount++;
-                tempColumnhold = c;
-            }
-            else
-            {
-                if (matchCount > 2)
+                if (GridElementComponent[c, i].RightGridElement != null &&
+                    GridElementComponent[c, i].GetTileId == GridElementComponent[c, i].RightGridElement.GetTileId)
                 {
-                    do
+                    matchCount++;
+                    tempColumnhold = c;
+                }
+                else
+                {
+                    if (matchCount > 2)
                     {
-                        GridElementComponent[tempColumnhold + 1, row].RemoveTile();
-                        tempColumnhold--;
-                        matchCount--;
-                    } while (matchCount > 0);
+                        do
+                        {
+                            GridElementComponent[tempColumnhold + 1, i].RemoveTile();
+                            tempColumnhold--;
+                            matchCount--;
+                        } while (matchCount > 0);
 
+                    }
+
+                    matchCount = 1;
                 }
 
-                matchCount = 1;
             }
-          
         }
+        
     }
 
 
