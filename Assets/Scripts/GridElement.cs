@@ -53,38 +53,31 @@ public class GridElement : MonoBehaviour
     //Remove tiles from child
     private void RemoveTile()
     {
+        //if the grid has a child
         if (transform.childCount > 0)
         {
+            //destroy the tile
             Destroy(transform.GetChild(0).gameObject);
-            StartCoroutine(WaitToArrangeTile());
+
+            //Wait to Rearrange the column after tile got removed
+            StartCoroutine(WaitToReArrangeColumn());
+
+
         }
     }
 
-    void SwapTile()
-    {
-        if (upGridElement != null && upGridElement.transform.childCount > 0)
-        {
-            upGridElement.transform.GetChild(0).SetParent(transform);
-
-            //RESET THE LOCAL POSITION OF THE CHILD
-            transform.GetChild(0).localPosition = new Vector3(0, 0, 0);
-            Debug.Log(transform.GetChild(0).localPosition);
-        }
-    }
-
-
-    IEnumerator WaitToArrangeTile()
+    IEnumerator WaitToReArrangeColumn()
     {
 
         yield return new WaitForSecondsRealtime(0.2f);
 
+        EventManager.onReArrangeColumn?.Invoke((int)transform.position.x);
 
-        if (upGridElement != null && upGridElement.transform.childCount > 0)
-        {
-            upGridElement.transform.GetChild(0).SetParent(transform);
-
-            //RESET THE LOCAL POSITION OF THE CHILD
-            transform.GetChild(0).localPosition = new Vector3(0, 0, 0);
-        }
     }
+
+
+
+ 
+
+
 }

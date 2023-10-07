@@ -6,7 +6,7 @@ public class BoardManager : MonoBehaviour
 {
 
 
-    private GridElement[,] GridElementComponent;                        //2D array to hold each grid object's element component
+    private GridElement[,] GridElementComponent;                      //2D array to hold each grid object's element component
 
     private GameObject gridElement;
 
@@ -28,6 +28,8 @@ public class BoardManager : MonoBehaviour
         EventManager.OnAssignNeighbours += AssignNeighbours;
         EventManager.OnSpawnGrid += SpawnGridElements;
         EventManager.OnPopulateGrid += PopulateGridElement;
+        //EventManager.onReArrangeGrid += ReArrangeGrid;
+        EventManager.onReArrangeColumn += ReArrangeColumn;
     }
 
     private void OnDisable()
@@ -36,6 +38,7 @@ public class BoardManager : MonoBehaviour
         EventManager.OnAssignNeighbours -= AssignNeighbours;
         EventManager.OnSpawnGrid -= SpawnGridElements;
         EventManager.OnPopulateGrid -= PopulateGridElement;
+        EventManager.onReArrangeColumn -= ReArrangeColumn;
 
     }
     // Start is called before the first frame update
@@ -44,7 +47,6 @@ public class BoardManager : MonoBehaviour
         EventManager.OnInitialzieGrid?.Invoke();
         EventManager.OnAssignNeighbours?.Invoke();
         EventManager.OnPopulateGrid?.Invoke();
-
     }
 
 
@@ -61,8 +63,6 @@ public class BoardManager : MonoBehaviour
                 EventManager.OnSpawnGrid?.Invoke(column, row);
             }
         }
-
-        //EventManager.OnAssignNeighbours?.Invoke();
 
     }
 
@@ -136,6 +136,26 @@ public class BoardManager : MonoBehaviour
             }
 
         }
+
+    }
+
+
+    //ReArrange the column after removing the tile
+    //Traverses the only column from where the tiles was removed
+    //Gets the position number from onMousClick event in GridElement.cs
+    public void ReArrangeColumn(int column)
+    {
+        for (int i = 0; i < numberOfRows; i++)
+        {
+            if (GridElementComponent[column, i].upGridElement != null && GridElementComponent[column, i].upGridElement.transform.childCount > 0 && GridElementComponent[column, i].transform.childCount == 0)
+            {
+                GridElementComponent[column, i].upGridElement.transform.GetChild(0).SetParent(GridElementComponent[column, i].transform);
+
+                //RESET THE LOCAL POSITION OF THE CHILD
+                GridElementComponent[column, i].transform.GetChild(0).localPosition = Vector3.zero;
+            }
+        }
+       
 
     }
 

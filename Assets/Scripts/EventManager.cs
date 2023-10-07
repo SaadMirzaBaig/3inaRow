@@ -11,7 +11,7 @@ public class EventManager : MonoBehaviour
     public static Action<int, int> OnSpawnGrid { get; set; }
     public static Action OnPopulateGrid { get; set; }
 
-
+    public static Action<int> onReArrangeColumn { get; set; }
 }
 
 
