@@ -14,6 +14,8 @@ public class GridElement : MonoBehaviour
 
     public GridElement downGridElement;
 
+   
+
     public void SpawnTile(List<GameObject> Tile)
     {
        
@@ -42,22 +44,47 @@ public class GridElement : MonoBehaviour
 
     }
 
+    public int GetTileId
+    {
+        get
+        {
+            if (GetHasTile)
+            {
+                return transform.GetComponentInChildren<Tile>().id;
+
+            }
+            else
+            {
+                return -1;
+            }
+
+        }
+    }
+    
+    public bool GetHasTile
+    {
+        get { return transform.childCount > 0; }
+        set {; }
+    }
+
     //On mouse click event
     //Invokes method to remove tile
     private void OnMouseDown ()
     {
+
         RemoveTile();
     }
 
 
     //Remove tiles from child
-    private void RemoveTile()
+    public void RemoveTile()
     {
         //if the grid has a child
-        if (transform.childCount > 0)
+        if (GetHasTile)
         {
             //destroy the tile
             Destroy(transform.GetChild(0).gameObject);
+            GetHasTile = false;
 
             //Wait to Rearrange the column after tile got removed
             StartCoroutine(WaitToReArrangeColumn());
@@ -71,7 +98,8 @@ public class GridElement : MonoBehaviour
 
         yield return new WaitForSecondsRealtime(0.2f);
 
-        EventManager.onReArrangeColumn?.Invoke((int)transform.position.x);
+        EventManager.onReArrangeColumn?.Invoke((int)transform.position.x, (int)transform.position.y);
+        //EventManager.onMatchScore?.Invoke((int)transform.position.y);
 
     }
 

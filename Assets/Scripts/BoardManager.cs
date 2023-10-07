@@ -28,8 +28,8 @@ public class BoardManager : MonoBehaviour
         EventManager.OnAssignNeighbours += AssignNeighbours;
         EventManager.OnSpawnGrid += SpawnGridElements;
         EventManager.OnPopulateGrid += PopulateGridElement;
-        //EventManager.onReArrangeGrid += ReArrangeGrid;
         EventManager.onReArrangeColumn += ReArrangeColumn;
+        EventManager.onMatchScore += CheckMatch;
     }
 
     private void OnDisable()
@@ -39,6 +39,7 @@ public class BoardManager : MonoBehaviour
         EventManager.OnSpawnGrid -= SpawnGridElements;
         EventManager.OnPopulateGrid -= PopulateGridElement;
         EventManager.onReArrangeColumn -= ReArrangeColumn;
+        EventManager.onMatchScore -= CheckMatch;
 
     }
     // Start is called before the first frame update
@@ -143,11 +144,13 @@ public class BoardManager : MonoBehaviour
     //ReArrange the column after removing the tile
     //Traverses the only column from where the tiles was removed
     //Gets the position number from onMousClick event in GridElement.cs
-    public void ReArrangeColumn(int column)
+    private void ReArrangeColumn(int column,int row)
     {
         for (int i = 0; i < numberOfRows; i++)
         {
-            if (GridElementComponent[column, i].upGridElement != null && GridElementComponent[column, i].upGridElement.transform.childCount > 0 && GridElementComponent[column, i].transform.childCount == 0)
+            if (GridElementComponent[column, i].upGridElement != null
+                && GridElementComponent[column, i].upGridElement.GetHasTile
+                && GridElementComponent[column, i].transform.childCount == 0)
             {
                 GridElementComponent[column, i].upGridElement.transform.GetChild(0).SetParent(GridElementComponent[column, i].transform);
 
@@ -155,10 +158,49 @@ public class BoardManager : MonoBehaviour
                 GridElementComponent[column, i].transform.GetChild(0).localPosition = Vector3.zero;
             }
         }
-       
 
+        StartCoroutine(WaitToCheckScore(row));
     }
 
 
+    private void CheckMatch(int row)
+    {
+        int matchCount = 1;
+        int tempColumnhold = 0;
+
+        for (int c = 0;  c < numberOfColumns;  c++)
+        {
+            if (GridElementComponent[c, row].RightGridElement != null && 
+                GridElementComponent[c, row].GetTileId == GridElementComponent[c, row].RightGridElement.GetTileId)
+            {
+                matchCount++;
+                tempColumnhold = c;
+            }
+            else
+            {
+                if (matchCount > 2)
+                {
+                    do
+                    {
+                        GridElementComponent[tempColumnhold + 1, row].RemoveTile();
+                        tempColumnhold--;
+                        matchCount--;
+                    } while (matchCount > 0);
+
+                }
+
+                matchCount = 1;
+            }
+          
+        }
+    }
+
+
+    IEnumerator WaitToCheckScore(int row)
+    {
+        yield return new WaitForFixedUpdate();
+
+        CheckMatch(row);
+    }
 
 }
