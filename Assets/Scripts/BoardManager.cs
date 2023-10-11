@@ -79,7 +79,9 @@ public class BoardManager : MonoBehaviour
 
         GridElementComponent[x, y] = gridElement.GetComponent<GridElement>();
     }
-
+    
+    //Assign neighbouring elements on each grid element. 
+    // Up/Right/Left/Down
     private void AssignNeighbours()
     {
 
@@ -142,7 +144,7 @@ public class BoardManager : MonoBehaviour
     //ReArrange the column after removing the tile
     //Traverses the only column from where the tiles was removed
     //Gets the position number from onMousClick event in GridElement.cs
-    private void ReArrangeColumn(int column,int row)
+    private void ReArrangeColumn(int column)
     {
         for (int i = 0; i < numberOfRows; i++)
         {

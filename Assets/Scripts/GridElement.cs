@@ -44,6 +44,7 @@ public class GridElement : MonoBehaviour
 
     }
 
+    //Return tileID
     public int GetTileId
     {
         get
@@ -61,6 +62,8 @@ public class GridElement : MonoBehaviour
         }
     }
     
+
+    //Return if it has a tile
     public bool GetHasTile
     {
         get { return transform.childCount > 0; }
@@ -93,12 +96,13 @@ public class GridElement : MonoBehaviour
         }
     }
 
+
     IEnumerator WaitToReArrangeColumn()
     {
 
         yield return new WaitForSecondsRealtime(0.2f);
 
-        EventManager.onReArrangeColumn?.Invoke((int)transform.position.x, (int)transform.position.y);
+        EventManager.onReArrangeColumn?.Invoke((int)transform.position.x);
 
     }
 
